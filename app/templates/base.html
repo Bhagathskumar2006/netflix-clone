@@ -20,12 +20,34 @@
         .dropdown-menu-custom a:hover { background: rgba(255,255,255,0.1); color: white; }
         .dropdown-menu-custom hr { border-color: #444; margin: 4px 0; }
         .user-info-box { padding: 10px 16px; border-bottom: 1px solid #444; margin-bottom: 5px; }
+        /* Search overlay */
+        .search-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 9998; align-items: flex-start; justify-content: center; padding-top: 80px; }
+        .search-overlay.show { display: flex; }
+        .search-box { width: 100%; max-width: 700px; position: relative; }
+        .search-box input { width: 100%; background: #1a1a1a; border: 2px solid #e50914; color: white; padding: 16px 20px 16px 50px; border-radius: 4px; font-size: 1.1rem; outline: none; }
+        .search-box input::placeholder { color: #666; }
+        .search-box .search-icon-inner { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #e50914; font-size: 1.1rem; }
+        .search-box .close-search { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #999; cursor: pointer; font-size: 1.2rem; }
+        .search-results-overlay { width: 100%; max-width: 700px; margin-top: 15px; }
         .content-area { padding-top: 70px; }
         .flash-messages { position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; }
         .built-by { text-align: center; padding: 20px; color: #555; font-size: 0.75rem; border-top: 1px solid #222; margin-top: 40px; }
     </style>
 </head>
 <body>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+    <div style="width:100%; max-width:700px; padding:0 20px;">
+        <div class="search-box">
+            <i class="fas fa-search search-icon-inner"></i>
+            <input type="text" id="searchInput" placeholder="Search movies, genres..." oninput="filterMovies(this.value)" autocomplete="off">
+            <i class="fas fa-times close-search" onclick="closeSearch()"></i>
+        </div>
+        <div id="searchResultsOverlay" class="search-results-overlay"></div>
+    </div>
+</div>
+
 <nav class="navbar" id="mainNav">
     <div class="d-flex align-items-center justify-content-between w-100">
         <div class="d-flex align-items-center gap-4">
@@ -41,8 +63,8 @@
         </div>
         <div class="d-flex align-items-center gap-3">
             {% if current_user.is_authenticated %}
-            <i class="fas fa-search text-white" style="cursor:pointer;"></i>
-            <i class="fas fa-bell text-white" style="cursor:pointer;"></i>
+            <i class="fas fa-search text-white" style="cursor:pointer; font-size:1.1rem;" id="searchBtn" onclick="openSearch()"></i>
+            <i class="fas fa-bell text-white" style="cursor:pointer; font-size:1.1rem;"></i>
             <div style="position:relative;">
                 <div class="profile-icon" id="profileBtn">{{ current_user.username[0].upper() }}</div>
                 <div class="dropdown-menu-custom" id="profileDropdown">
@@ -106,27 +128,63 @@
         else nav.classList.remove('scrolled');
     });
 
-    // Profile dropdown - click to open/close
+    // Profile dropdown
     const profileBtn = document.getElementById('profileBtn');
     const profileDropdown = document.getElementById('profileDropdown');
-
     if (profileBtn && profileDropdown) {
         profileBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             profileDropdown.classList.toggle('show');
         });
-
-        // Close when clicking outside
         document.addEventListener('click', function(e) {
             if (!profileDropdown.contains(e.target) && e.target !== profileBtn) {
                 profileDropdown.classList.remove('show');
             }
         });
+        profileDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+    }
 
-        // Keep open when clicking inside dropdown
-        profileDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
+    // Search overlay
+    function openSearch() {
+        document.getElementById('searchOverlay').classList.add('show');
+        setTimeout(() => document.getElementById('searchInput').focus(), 100);
+    }
+    function closeSearch() {
+        document.getElementById('searchOverlay').classList.remove('show');
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchResultsOverlay').innerHTML = '';
+    }
+    document.getElementById('searchOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeSearch();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSearch();
+    });
+
+    // Search filter - defined globally so dashboard can use it
+    var allMoviesData = [];
+    function filterMovies(query) {
+        const resultsDiv = document.getElementById('searchResultsOverlay');
+        if (!resultsDiv) return;
+        if (query.length < 2) { resultsDiv.innerHTML = ''; return; }
+        const filtered = allMoviesData.filter(m =>
+            m.title.toLowerCase().includes(query.toLowerCase()) ||
+            m.genre.toLowerCase().includes(query.toLowerCase())
+        );
+        if (filtered.length === 0) {
+            resultsDiv.innerHTML = '<p style="color:#777; padding:10px;">No results found</p>';
+        } else {
+            resultsDiv.innerHTML = '<div style="display:flex; flex-wrap:wrap; gap:10px;">' +
+                filtered.map(m => `
+                    <div onclick="window.location='/watch/${m.id}'; closeSearch();" style="cursor:pointer; width:140px; border-radius:4px; overflow:hidden; background:#1a1a1a;">
+                        <img src="${m.thumbnail}" style="width:100%; height:80px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/140x80/1a1a1a/e50914?text=SX'">
+                        <div style="padding:6px 8px;">
+                            <div style="font-size:0.72rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${m.title}</div>
+                            <span style="background:#e50914; font-size:0.6rem; padding:1px 4px; border-radius:2px;">${m.genre}</span>
+                        </div>
+                    </div>
+                `).join('') + '</div>';
+        }
     }
 </script>
 </body>
