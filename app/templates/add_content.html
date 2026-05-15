@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="padding:40px; background:#141414; min-height:100vh;">
+    <div style="max-width:600px; margin:0 auto;">
+        <div style="margin-bottom:30px;">
+            <a href="/admin" style="color:#b3b3b3; text-decoration:none; font-size:0.9rem;"><i class="fas fa-arrow-left me-2"></i>Back to Admin</a>
+            <h2 style="font-size:1.8rem; font-weight:900; margin-top:15px;">Add New Content</h2>
+            <p style="color:#777;">Add a new movie or TV show to Netflix</p>
+        </div>
+        <div style="background:#1f1f1f; border-radius:8px; padding:35px;">
+            <form method="POST">
+                <div class="mb-4">
+                    <label style="color:#b3b3b3; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:block;">Title</label>
+                    <input type="text" name="title" class="form-control" placeholder="e.g. Avengers Endgame" required style="background:#333; border:none; color:white; padding:14px; border-radius:4px; font-size:1rem;">
+                </div>
+                <div class="mb-4">
+                    <label style="color:#b3b3b3; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:block;">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Brief description of the content..." required style="background:#333; border:none; color:white; padding:14px; border-radius:4px; font-size:1rem; resize:none;"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label style="color:#b3b3b3; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:block;">Genre</label>
+                    <select name="genre" class="form-control" style="background:#333; border:none; color:white; padding:14px; border-radius:4px; font-size:1rem;">
+                        <option>Action</option>
+                        <option>Comedy</option>
+                        <option>Drama</option>
+                        <option>Horror</option>
+                        <option>Sci-Fi</option>
+                        <option>Romance</option>
+                        <option>Thriller</option>
+                        <option>Animation</option>
+                        <option>Documentary</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label style="color:#b3b3b3; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:block;">YouTube Embed URL</label>
+                    <input type="text" name="youtube_url" class="form-control" placeholder="https://www.youtube.com/embed/VIDEOID" required style="background:#333; border:none; color:white; padding:14px; border-radius:4px; font-size:1rem;">
+                    <small style="color:#777; font-size:0.8rem;">Go to YouTube → Share → Embed → copy the src URL</small>
+                </div>
+                <div class="mb-4">
+                    <label style="color:#b3b3b3; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:block;">Thumbnail URL</label>
+                    <input type="text" name="thumbnail" class="form-control" placeholder="https://image-url.jpg" required style="background:#333; border:none; color:white; padding:14px; border-radius:4px; font-size:1rem;">
+                    <small style="color:#777; font-size:0.8rem;">Paste any image URL from Google Images</small>
+                </div>
+                <button type="submit" class="btn w-100 btn-lg mt-2" style="background:#e50914; color:white; font-weight:700; padding:15px; border-radius:4px; font-size:1rem;">
+                    <i class="fas fa-plus me-2"></i>Add to Netflix
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

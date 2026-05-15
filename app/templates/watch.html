@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="background:#000; min-height:100vh; padding:20px 40px;">
+    <!-- Video Player -->
+    <div style="max-width:1000px; margin:0 auto;">
+        <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+            <iframe src="{{ movie.youtube_url }}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        </div>
+
+        <!-- Movie Info -->
+        <div style="margin-top:25px; display:flex; justify-content:space-between; align-items:flex-start;">
+            <div style="flex:1;">
+                <h2 style="font-size:2rem; font-weight:900;">{{ movie.title }}</h2>
+                <div style="display:flex; gap:15px; align-items:center; margin:10px 0;">
+                    <span style="color:#46d369; font-weight:700;">98% Match</span>
+                    <span style="border:1px solid #777; padding:1px 6px; font-size:0.8rem; color:#ddd;">HD</span>
+                    <span style="background:#e50914; padding:2px 8px; border-radius:3px; font-size:0.8rem; font-weight:700;">{{ movie.genre }}</span>
+                </div>
+                <p style="color:#d2d2d2; font-size:1rem; line-height:1.6; max-width:700px;">{{ movie.description }}</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; min-width:150px; align-items:flex-end;">
+                <a href="/dashboard" style="background:rgba(109,109,110,0.7); color:white; padding:8px 20px; border-radius:4px; text-decoration:none; font-weight:600; font-size:0.9rem;"><i class="fas fa-arrow-left me-2"></i>Back</a>
+                <button style="background:transparent; border:1px solid #777; color:white; padding:8px 20px; border-radius:4px; font-size:0.9rem;"><i class="fas fa-plus me-2"></i>My List</button>
+                <button style="background:transparent; border:1px solid #777; color:white; padding:8px 20px; border-radius:4px; font-size:0.9rem;"><i class="fas fa-thumbs-up me-2"></i>Rate</button>
+            </div>
+        </div>
+
+        <!-- More Like This -->
+        <div style="margin-top:40px; border-top:1px solid #333; padding-top:30px;">
+            <h4 style="font-size:1.2rem; font-weight:700; margin-bottom:15px;">More Like This</h4>
+            <p style="color:#777; font-size:0.9rem;">Add more content from the admin panel to see recommendations here.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #141414; color: white; font-family: 'Netflix Sans', Arial, sans-serif; }
+        .navbar { background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%); padding: 15px 40px; position: fixed; top: 0; width: 100%; z-index: 1000; transition: background 0.3s; }
+        .navbar.scrolled { background: #141414 !important; }
+        .navbar-brand img { height: 35px; }
+        .navbar-brand span { color: #e50914; font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
+        .nav-links a { color: #e5e5e5; text-decoration: none; margin: 0 10px; font-size: 0.85rem; transition: color 0.2s; }
+        .nav-links a:hover { color: #b3b3b3; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .profile-menu { position: relative; cursor: pointer; }
+        .profile-icon { width: 32px; height: 32px; border-radius: 4px; background: #e50914; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; }
+        .dropdown-menu-custom { display: none; position: absolute; right: 0; top: 45px; background: rgba(0,0,0,0.9); border: 1px solid #333; border-radius: 4px; min-width: 180px; padding: 8px 0; }
+        .profile-menu:hover .dropdown-menu-custom { display: block; }
+        .dropdown-menu-custom a { display: block; padding: 8px 16px; color: #e5e5e5; text-decoration: none; font-size: 0.85rem; transition: background 0.2s; }
+        .dropdown-menu-custom a:hover { background: rgba(255,255,255,0.1); }
+        .dropdown-menu-custom hr { border-color: #333; margin: 4px 0; }
+        .switch-profile { background: rgba(20,20,20,0.95); border: 1px solid #333; border-radius: 8px; padding: 20px; position: fixed; top: 70px; right: 20px; z-index: 9999; display: none; min-width: 220px; }
+        .switch-profile.show { display: block; }
+        .switch-profile h6 { color: #b3b3b3; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+        .profile-option { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s; text-decoration: none; color: white; }
+        .profile-option:hover { background: rgba(255,255,255,0.1); color: white; }
+        .profile-option .avatar { width: 40px; height: 40px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem; }
+        .content-area { padding-top: 70px; }
+        .btn-netflix { background: #e50914; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: 600; transition: background 0.2s; }
+        .btn-netflix:hover { background: #f40612; color: white; }
+        .btn-netflix-outline { background: transparent; color: white; border: 1px solid white; padding: 8px 20px; border-radius: 4px; font-weight: 600; transition: all 0.2s; }
+        .btn-netflix-outline:hover { background: rgba(255,255,255,0.1); color: white; }
+        .flash-messages { position: fixed; top: 80px; right: 20px; z-index: 9999; }
+        /* Quick switch banner */
+        .quick-switch { background: rgba(229,9,20,0.15); border: 1px solid #e50914; border-radius: 8px; padding: 10px 20px; margin: 80px 40px 0; display: flex; align-items: center; justify-content: space-between; }
+        .quick-switch span { font-size: 0.85rem; color: #e5e5e5; }
+        .quick-switch-btns { display: flex; gap: 10px; }
+        .quick-switch-btns a { padding: 5px 15px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .btn-switch-admin { background: #e50914; color: white; }
+        .btn-switch-user { background: #333; color: white; }
+        .btn-switch-admin:hover { background: #f40612; color: white; }
+        .btn-switch-user:hover { background: #444; color: white; }
+    </style>
+</head>
+<body>
+<nav class="navbar" id="mainNav">
+    <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="d-flex align-items-center gap-4">
+            <a class="navbar-brand text-decoration-none" href="/"><span>NETFLIX</span></a>
+            {% if current_user.is_authenticated %}
+            <div class="nav-links d-none d-md-flex">
+                <a href="/dashboard">Home</a>
+                <a href="/dashboard">TV Shows</a>
+                <a href="/dashboard">Movies</a>
+                <a href="/dashboard">New & Popular</a>
+                <a href="/dashboard">My List</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="nav-right">
+            {% if current_user.is_authenticated %}
+            <i class="fas fa-search text-white" style="cursor:pointer; font-size:1.1rem;"></i>
+            <i class="fas fa-bell text-white" style="cursor:pointer; font-size:1.1rem;"></i>
+            <div class="profile-menu">
+                <div class="profile-icon">{{ current_user.username[0].upper() }}</div>
+                <div class="dropdown-menu-custom">
+                    <div class="px-3 py-2 text-muted" style="font-size:0.8rem;">{{ current_user.username }}</div>
+                    <hr>
+                    {% if current_user.role == 'admin' %}
+                    <a href="/admin"><i class="fas fa-cog me-2"></i>Admin Panel</a>
+                    {% endif %}
+                    <a href="/dashboard"><i class="fas fa-home me-2"></i>Dashboard</a>
+                    <hr>
+                    <a href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sign out</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/login" class="btn-netflix btn">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- QUICK SWITCH BANNER -->
+{% if current_user.is_authenticated %}
+<div class="quick-switch">
+    <span>⚡ Quick Switch — logged in as <strong>{{ current_user.username }}</strong> ({{ current_user.role }})</span>
+    <div class="quick-switch-btns">
+        <a href="/switch/admin" class="btn-switch-admin">Switch to Admin</a>
+        <a href="/switch/user" class="btn-switch-user">Switch to User</a>
+    </div>
+</div>
+{% endif %}
+
+<div class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" style="min-width:300px;">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endwith %}
+</div>
+
+<div class="content-area">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.addEventListener('scroll', function() {
+        const nav = document.getElementById('mainNav');
+        if (window.scrollY > 50) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+    });
+</script>
+</body>
+</html>

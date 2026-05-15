@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="min-height:100vh; background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url('https://assets.nflxext.com/ffe/siteui/vlv3/9fbb5827-87b3-4d37-95f4-ee3d4e5a28de/web/IN-en-20250120-TRIFECTA-perspective_24e34af1-3c83-4e3d-b8d5-06f90bc6e41e_large.jpg') center/cover; display:flex; align-items:center; justify-content:center; margin-top:-70px; padding-top:70px;">
+    <div style="background:rgba(0,0,0,0.75); padding:60px 68px; border-radius:4px; width:100%; max-width:450px;">
+        <h2 style="font-size:2rem; font-weight:700; margin-bottom:28px;">Sign Up</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <input type="text" name="username" class="form-control form-control-lg" placeholder="Username" required style="background:#333; border:none; color:white; padding:16px; border-radius:4px;">
+            </div>
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" required style="background:#333; border:none; color:white; padding:16px; border-radius:4px;">
+            </div>
+            <div class="mb-4">
+                <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" required style="background:#333; border:none; color:white; padding:16px; border-radius:4px;">
+            </div>
+            <button type="submit" class="btn w-100 btn-lg mb-4" style="background:#e50914; color:white; font-size:1rem; font-weight:600; padding:16px; border-radius:4px;">Sign Up</button>
+        </form>
+        <p style="color:#737373; font-size:1rem;">Already have an account? <a href="/login" style="color:white; text-decoration:none; font-weight:600;">Sign in now</a></p>
+    </div>
+</div>
+{% endblock %}

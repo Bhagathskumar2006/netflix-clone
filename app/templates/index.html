@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="position:relative; height:100vh; overflow:hidden; margin-top:-70px;">
+    <div style="position:absolute; inset:0; background:linear-gradient(to right, rgba(0,0,0,0.8) 40%, transparent 100%), linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%), url('https://assets.nflxext.com/ffe/siteui/vlv3/9fbb5827-87b3-4d37-95f4-ee3d4e5a28de/web/IN-en-20250120-TRIFECTA-perspective_24e34af1-3c83-4e3d-b8d5-06f90bc6e41e_large.jpg') center/cover no-repeat;"></div>
+    <div style="position:relative; z-index:1; padding: 250px 60px 0;">
+        <h1 style="font-size:3rem; font-weight:900; max-width:600px; line-height:1.1;">Unlimited movies, TV shows and more</h1>
+        <p style="font-size:1.3rem; margin:15px 0 25px; color:#e5e5e5;">Watch anywhere. Cancel anytime.</p>
+        <div class="d-flex gap-3">
+            <a href="/register" class="btn-netflix btn btn-lg px-5">Get Started</a>
+            <a href="/login" class="btn-netflix-outline btn btn-lg px-5">Sign In</a>
+        </div>
+    </div>
+</div>
+
+<div style="padding: 40px 60px; background:#141414;">
+    <h3 style="font-size:1.4rem; font-weight:700; margin-bottom:20px;">Popular on Netflix</h3>
+    <div class="row g-3">
+        {% for movie in movies %}
+        <div class="col-6 col-md-3 col-lg-2">
+            <div onclick="window.location='/watch/{{ movie.id }}'" style="cursor:pointer; position:relative; border-radius:4px; overflow:hidden; transition:transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='scale(1.08)';this.style.zIndex='10';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.8)'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1';this.style.boxShadow='none'">
+                <img src="{{ movie.thumbnail }}" style="width:100%; height:150px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/300x150/1f1f1f/e50914?text=Netflix'">
+                <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:20px 8px 8px;">
+                    <div style="font-size:0.75rem; font-weight:600;">{{ movie.title }}</div>
+                    <span style="background:#e50914; font-size:0.65rem; padding:1px 6px; border-radius:2px;">{{ movie.genre }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="background:#000; padding:60px; border-top:8px solid #222;">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h2 style="font-size:2.5rem; font-weight:900;">Enjoy on your TV.</h2>
+            <p style="color:#e5e5e5; font-size:1.1rem; margin-top:15px;">Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more.</p>
+        </div>
+        <div class="col-md-6 text-center">
+            <i class="fas fa-tv" style="font-size:8rem; color:#e50914;"></i>
+        </div>
+    </div>
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 text-center order-md-1">
+            <i class="fas fa-mobile-alt" style="font-size:8rem; color:#e50914;"></i>
+        </div>
+        <div class="col-md-6 order-md-2">
+            <h2 style="font-size:2.5rem; font-weight:900;">Download your shows to watch offline.</h2>
+            <p style="color:#e5e5e5; font-size:1.1rem; margin-top:15px;">Save your favourites easily and always have something to watch.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
