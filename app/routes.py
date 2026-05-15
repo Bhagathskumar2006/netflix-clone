@@ -152,3 +152,28 @@ def switch(role):
         login_user(user_obj)
         flash(f'Switched to {role} account!', 'success')
     return redirect(url_for('main.dashboard'))
+
+# ADMIN EDIT CONTENT
+@main.route('/admin/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_content(id):
+    if current_user.role != 'admin':
+        return redirect(url_for('main.dashboard'))
+    db = get_db()
+    cursor = db.cursor()
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        genre = request.form['genre']
+        youtube_url = request.form['youtube_url']
+        thumbnail = request.form['thumbnail']
+        cursor.execute("UPDATE content SET title=%s, description=%s, genre=%s, youtube_url=%s, thumbnail=%s WHERE id=%s",
+                      (title, description, genre, youtube_url, thumbnail, id))
+        db.commit()
+        db.close()
+        flash('Content updated!', 'success')
+        return redirect(url_for('main.admin'))
+    cursor.execute("SELECT * FROM content WHERE id = %s", (id,))
+    movie = cursor.fetchone()
+    db.close()
+    return render_template('edit_content.html', movie=movie)

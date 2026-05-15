@@ -4,47 +4,39 @@
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
         <div>
             <h2 style="font-size:1.8rem; font-weight:900;">Admin Dashboard</h2>
-            <p style="color:#777; margin:0;">Manage your StreamX content</p>
+            <p style="color:#777; margin:0;">Manage StreamX content — Built by Bhagath S Kumar</p>
         </div>
-        <a href="/admin/add" style="background:#e50914; color:white; padding:10px 24px; border-radius:4px; text-decoration:none; font-weight:700; font-size:0.95rem;"><i class="fas fa-plus me-2"></i>Add Content</a>
+        <a href="/admin/add" style="background:#e50914; color:white; padding:10px 24px; border-radius:4px; text-decoration:none; font-weight:700;"><i class="fas fa-plus me-2"></i>Add Content</a>
     </div>
-
-    <!-- Stats Cards -->
     <div class="row g-4 mb-5">
         <div class="col-md-3">
             <div style="background:#1f1f1f; border-radius:8px; padding:25px; border-left:4px solid #e50914;">
                 <div style="font-size:2.5rem; font-weight:900; color:#e50914;">{{ user_count }}</div>
-                <div style="color:#b3b3b3; margin-top:5px;">Total Users</div>
-                <i class="fas fa-users" style="color:#333; font-size:2rem; float:right; margin-top:-40px;"></i>
+                <div style="color:#b3b3b3;">Total Users</div>
             </div>
         </div>
         <div class="col-md-3">
             <div style="background:#1f1f1f; border-radius:8px; padding:25px; border-left:4px solid #46d369;">
                 <div style="font-size:2.5rem; font-weight:900; color:#46d369;">{{ movies|length }}</div>
-                <div style="color:#b3b3b3; margin-top:5px;">Total Content</div>
-                <i class="fas fa-film" style="color:#333; font-size:2rem; float:right; margin-top:-40px;"></i>
+                <div style="color:#b3b3b3;">Total Content</div>
             </div>
         </div>
         <div class="col-md-3">
             <div style="background:#1f1f1f; border-radius:8px; padding:25px; border-left:4px solid #0080ff;">
-                <div style="font-size:2.5rem; font-weight:900; color:#0080ff;">24/7</div>
-                <div style="color:#b3b3b3; margin-top:5px;">Uptime</div>
-                <i class="fas fa-server" style="color:#333; font-size:2rem; float:right; margin-top:-40px;"></i>
+                <div style="font-size:2.5rem; font-weight:900; color:#0080ff;">AWS</div>
+                <div style="color:#b3b3b3;">Cloud Hosted</div>
             </div>
         </div>
         <div class="col-md-3">
             <div style="background:#1f1f1f; border-radius:8px; padding:25px; border-left:4px solid #ffb800;">
-                <div style="font-size:2.5rem; font-weight:900; color:#ffb800;">AWS</div>
-                <div style="color:#b3b3b3; margin-top:5px;">Cloud Hosted</div>
-                <i class="fas fa-cloud" style="color:#333; font-size:2rem; float:right; margin-top:-40px;"></i>
+                <div style="font-size:2.5rem; font-weight:900; color:#ffb800;">24/7</div>
+                <div style="color:#b3b3b3;">Uptime</div>
             </div>
         </div>
     </div>
-
-    <!-- Content Table -->
     <div style="background:#1f1f1f; border-radius:8px; overflow:hidden;">
-        <div style="padding:20px 25px; border-bottom:1px solid #333;">
-            <h5 style="margin:0; font-weight:700;">All Content</h5>
+        <div style="padding:20px 25px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center;">
+            <h5 style="margin:0; font-weight:700;">All Content ({{ movies|length }})</h5>
         </div>
         <table style="width:100%; border-collapse:collapse;">
             <thead>
@@ -57,15 +49,16 @@
             </thead>
             <tbody>
                 {% for movie in movies %}
-                <tr style="border-bottom:1px solid #2a2a2a; transition:background 0.2s;" onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
+                <tr style="border-bottom:1px solid #2a2a2a;" onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
                     <td style="padding:12px 20px;">
-                        <img src="{{ movie.thumbnail }}" style="width:80px; height:45px; object-fit:cover; border-radius:4px;" onerror="this.src='https://via.placeholder.com/80x45/333/e50914?text=N'">
+                        <img src="{{ movie.thumbnail }}" style="width:80px; height:45px; object-fit:cover; border-radius:4px;" onerror="this.src='https://via.placeholder.com/80x45/333/e50914?text=SX'">
                     </td>
                     <td style="padding:12px 20px; font-weight:600;">{{ movie.title }}</td>
                     <td style="padding:12px 20px;"><span style="background:#e50914; padding:3px 10px; border-radius:3px; font-size:0.75rem; font-weight:700;">{{ movie.genre }}</span></td>
                     <td style="padding:12px 20px;">
                         <div style="display:flex; gap:8px;">
                             <a href="/watch/{{ movie.id }}" style="background:#333; color:white; padding:5px 12px; border-radius:4px; text-decoration:none; font-size:0.8rem;"><i class="fas fa-eye me-1"></i>View</a>
+                            <a href="/admin/edit/{{ movie.id }}" style="background:#0080ff; color:white; padding:5px 12px; border-radius:4px; text-decoration:none; font-size:0.8rem;"><i class="fas fa-edit me-1"></i>Edit</a>
                             <a href="/admin/delete/{{ movie.id }}" onclick="return confirm('Delete {{ movie.title }}?')" style="background:#e50914; color:white; padding:5px 12px; border-radius:4px; text-decoration:none; font-size:0.8rem;"><i class="fas fa-trash me-1"></i>Delete</a>
                         </div>
                     </td>
