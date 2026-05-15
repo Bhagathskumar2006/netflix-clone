@@ -13,12 +13,12 @@
 </div>
 
 <div style="padding: 40px 60px; background:#141414;">
-    <h3 style="font-size:1.4rem; font-weight:700; margin-bottom:20px;">Popular on Netflix</h3>
+    <h3 style="font-size:1.4rem; font-weight:700; margin-bottom:20px;">Popular on StreamX</h3>
     <div class="row g-3">
         {% for movie in movies %}
         <div class="col-6 col-md-3 col-lg-2">
             <div onclick="window.location='/watch/{{ movie.id }}'" style="cursor:pointer; position:relative; border-radius:4px; overflow:hidden; transition:transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='scale(1.08)';this.style.zIndex='10';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.8)'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1';this.style.boxShadow='none'">
-                <img src="{{ movie.thumbnail }}" style="width:100%; height:150px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/300x150/1f1f1f/e50914?text=Netflix'">
+                <img src="{{ movie.thumbnail }}" style="width:100%; height:150px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/300x150/1f1f1f/e50914?text=StreamX'">
                 <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.9)); padding:20px 8px 8px;">
                     <div style="font-size:0.75rem; font-weight:600;">{{ movie.title }}</div>
                     <span style="background:#e50914; font-size:0.65rem; padding:1px 6px; border-radius:2px;">{{ movie.genre }}</span>

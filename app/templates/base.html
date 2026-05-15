@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix</title>
+    <title>StreamX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #141414; color: white; font-family: 'Netflix Sans', Arial, sans-serif; }
+        body { background-color: #141414; color: white; font-family: 'StreamX Sans', Arial, sans-serif; }
         .navbar { background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%); padding: 15px 40px; position: fixed; top: 0; width: 100%; z-index: 1000; transition: background 0.3s; }
         .navbar.scrolled { background: #141414 !important; }
         .navbar-brand img { height: 35px; }
@@ -30,10 +30,10 @@
         .profile-option:hover { background: rgba(255,255,255,0.1); color: white; }
         .profile-option .avatar { width: 40px; height: 40px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem; }
         .content-area { padding-top: 70px; }
-        .btn-netflix { background: #e50914; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: 600; transition: background 0.2s; }
-        .btn-netflix:hover { background: #f40612; color: white; }
-        .btn-netflix-outline { background: transparent; color: white; border: 1px solid white; padding: 8px 20px; border-radius: 4px; font-weight: 600; transition: all 0.2s; }
-        .btn-netflix-outline:hover { background: rgba(255,255,255,0.1); color: white; }
+        .btn-streamx { background: #e50914; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: 600; transition: background 0.2s; }
+        .btn-streamx:hover { background: #f40612; color: white; }
+        .btn-streamx-outline { background: transparent; color: white; border: 1px solid white; padding: 8px 20px; border-radius: 4px; font-weight: 600; transition: all 0.2s; }
+        .btn-streamx-outline:hover { background: rgba(255,255,255,0.1); color: white; }
         .flash-messages { position: fixed; top: 80px; right: 20px; z-index: 9999; }
         /* Quick switch banner */
         .quick-switch { background: rgba(229,9,20,0.15); border: 1px solid #e50914; border-radius: 8px; padding: 10px 20px; margin: 80px 40px 0; display: flex; align-items: center; justify-content: space-between; }
@@ -50,7 +50,7 @@
 <nav class="navbar" id="mainNav">
     <div class="d-flex align-items-center justify-content-between w-100">
         <div class="d-flex align-items-center gap-4">
-            <a class="navbar-brand text-decoration-none" href="/"><span>NETFLIX</span></a>
+            <a class="navbar-brand text-decoration-none" href="/"><span>STREAMX</span></a>
             {% if current_user.is_authenticated %}
             <div class="nav-links d-none d-md-flex">
                 <a href="/dashboard">Home</a>
@@ -79,7 +79,7 @@
                 </div>
             </div>
             {% else %}
-            <a href="/login" class="btn-netflix btn">Sign In</a>
+            <a href="/login" class="btn-streamx btn">Sign In</a>
             {% endif %}
         </div>
     </div>
