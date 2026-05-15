@@ -1,36 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if movies %}
+
+<!-- AUTO LOOP HERO BANNER -->
 <div style="position:relative; height:85vh; overflow:hidden; margin-top:-14px;">
-    <div style="position:absolute; inset:0; background:linear-gradient(to right, rgba(0,0,0,0.85) 40%, transparent 100%), linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 50%), url('{{ movies[0].thumbnail }}') center/cover no-repeat;"></div>
-    <div style="position:relative; z-index:1; padding:200px 60px 0;">
-        <p style="color:#e50914; font-weight:700; font-size:0.9rem; letter-spacing:2px; text-transform:uppercase;">🔥 #1 in India Today</p>
-        <h1 style="font-size:3.5rem; font-weight:900; max-width:550px; line-height:1.1; text-shadow:2px 2px 8px rgba(0,0,0,0.8);">{{ movies[0].title }}</h1>
-        <p style="color:#e5e5e5; margin:15px 0; font-size:1rem; max-width:500px; line-height:1.6;">{{ movies[0].description }}</p>
-        <div style="display:flex; gap:12px; margin-top:20px;">
-            <a href="/watch/{{ movies[0].id }}" style="background:white; color:black; padding:12px 32px; border-radius:4px; text-decoration:none; font-weight:700; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas fa-play"></i> Play</a>
-            <a href="/watch/{{ movies[0].id }}" style="background:rgba(109,109,110,0.7); color:white; padding:12px 32px; border-radius:4px; text-decoration:none; font-weight:700; font-size:1rem; display:flex; align-items:center; gap:8px; backdrop-filter:blur(4px);"><i class="fas fa-info-circle"></i> More Info</a>
+    {% for movie in movies %}
+    <div class="hero-slide" data-index="{{ loop.index0 }}" style="position:absolute; inset:0; opacity:{% if loop.first %}1{% else %}0{% endif %}; transition:opacity 1s ease-in-out;">
+        <div style="position:absolute; inset:0; background:linear-gradient(to right, rgba(0,0,0,0.85) 40%, transparent 100%), linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 50%), url('{{ movie.thumbnail }}') center/cover no-repeat;"></div>
+        <div style="position:relative; z-index:1; padding:200px 60px 0;">
+            <div style="max-width:500px;">
+                <p style="color:#e50914; font-weight:700; font-size:0.9rem; letter-spacing:2px; text-transform:uppercase;">🔥 Trending on StreamX</p>
+                <h1 style="font-size:3rem; font-weight:900; line-height:1.1; text-shadow:2px 2px 8px rgba(0,0,0,0.8);">{{ movie.title }}</h1>
+                <p style="color:#e5e5e5; margin:15px 0; font-size:1rem; line-height:1.6;">{{ movie.description[:150] }}...</p>
+                <div style="display:flex; gap:12px; margin-top:20px;">
+                    <a href="/watch/{{ movie.id }}" style="background:white; color:black; padding:12px 32px; border-radius:4px; text-decoration:none; font-weight:700; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas fa-play"></i> Play</a>
+                    <a href="/watch/{{ movie.id }}" style="background:rgba(109,109,110,0.7); color:white; padding:12px 32px; border-radius:4px; text-decoration:none; font-weight:700; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas fa-info-circle"></i> More Info</a>
+                </div>
+            </div>
         </div>
     </div>
+    {% endfor %}
+
+    <!-- Banner indicators -->
+    <div style="position:absolute; bottom:100px; left:60px; z-index:10; display:flex; gap:6px;">
+        {% for movie in movies %}
+        <div class="banner-dot" data-index="{{ loop.index0 }}" style="width:{% if loop.first %}20px{% else %}8px{% endif %}; height:4px; border-radius:2px; background:{% if loop.first %}white{% else %}rgba(255,255,255,0.4){% endif %}; transition:all 0.3s; cursor:pointer;"></div>
+        {% endfor %}
+    </div>
+
     <div style="position:absolute; bottom:0; left:0; right:0; height:200px; background:linear-gradient(transparent, #141414);"></div>
 </div>
-{% endif %}
+
+<!-- SEARCH BAR -->
+<div id="searchBar" style="display:none; padding:20px 40px; background:#1a1a1a; border-bottom:1px solid #333;">
+    <div style="max-width:600px; margin:0 auto; position:relative;">
+        <input type="text" id="searchInput" placeholder="Search movies, shows..." style="width:100%; background:#333; border:none; color:white; padding:12px 20px 12px 45px; border-radius:4px; font-size:1rem;" oninput="filterMovies(this.value)">
+        <i class="fas fa-search" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); color:#999;"></i>
+    </div>
+</div>
+
+<!-- SEARCH RESULTS -->
+<div id="searchResults" style="display:none; padding:20px 40px; background:#141414;">
+    <h4 style="margin-bottom:15px;">Search Results</h4>
+    <div id="searchGrid" class="row g-3"></div>
+</div>
 
 <div style="background:#141414; padding:0 40px 40px; margin-top:-60px; position:relative; z-index:2;">
 
-    <!-- Row 1: Trending -->
+    <!-- Trending Row -->
     <div class="mb-5">
         <h4 style="font-size:1.3rem; font-weight:700; margin-bottom:15px;">🔥 Trending Now</h4>
         <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:15px; scrollbar-width:thin; scrollbar-color:#333 transparent;">
             {% for movie in movies %}
-            <div onclick="window.location='/watch/{{ movie.id }}'" style="min-width:185px; max-width:185px; cursor:pointer; border-radius:6px; overflow:hidden; transition:transform 0.3s, box-shadow 0.3s; flex-shrink:0;" onmouseover="this.style.transform='scale(1.1)';this.style.zIndex='10';this.style.boxShadow='0 15px 40px rgba(0,0,0,0.9)'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1';this.style.boxShadow='none'">
+            <div onclick="window.location='/watch/{{ movie.id }}'" style="min-width:185px; max-width:185px; cursor:pointer; border-radius:6px; overflow:hidden; transition:transform 0.3s; flex-shrink:0;" onmouseover="this.style.transform='scale(1.1)';this.style.zIndex='10'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1'">
                 <div style="position:relative;">
-                    <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; display:block; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                    <div style="display:none; width:100%; height:105px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); align-items:center; justify-content:center; flex-direction:column; gap:5px;">
+                    <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div style="display:none; width:100%; height:105px; background:#1a1a1a; align-items:center; justify-content:center; flex-direction:column; gap:5px;">
                         <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
                         <span style="font-size:0.65rem; color:#999; text-align:center; padding:0 5px;">{{ movie.title }}</span>
                     </div>
-                    <div style="position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(to right, #e50914, transparent); width:{{ (loop.index * 37) % 100 }}%;"></div>
+                    <div style="position:absolute; bottom:0; left:0; right:0; height:3px; background:#e50914; width:{{ (loop.index * 37) % 100 }}%;"></div>
                 </div>
                 <div style="background:#181818; padding:8px 10px;">
                     <div style="font-size:0.75rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px;">{{ movie.title }}</div>
@@ -44,19 +72,16 @@
         </div>
     </div>
 
-    <!-- Row 2: Action -->
+    <!-- Action Row -->
     <div class="mb-5">
         <h4 style="font-size:1.3rem; font-weight:700; margin-bottom:15px;">💥 Action & Adventure</h4>
         <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:15px; scrollbar-width:thin; scrollbar-color:#333 transparent;">
             {% for movie in movies %}
             {% if movie.genre == 'Action' %}
             <div onclick="window.location='/watch/{{ movie.id }}'" style="min-width:185px; max-width:185px; cursor:pointer; border-radius:6px; overflow:hidden; transition:transform 0.3s; flex-shrink:0;" onmouseover="this.style.transform='scale(1.1)';this.style.zIndex='10'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1'">
-                <div style="position:relative;">
-                    <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                    <div style="display:none; width:100%; height:105px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); align-items:center; justify-content:center; flex-direction:column; gap:5px;">
-                        <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
-                        <span style="font-size:0.65rem; color:#999; text-align:center; padding:0 5px;">{{ movie.title }}</span>
-                    </div>
+                <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div style="display:none; width:100%; height:105px; background:#1a1a1a; align-items:center; justify-content:center;">
+                    <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
                 </div>
                 <div style="background:#181818; padding:8px 10px;">
                     <div style="font-size:0.75rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ movie.title }}</div>
@@ -67,19 +92,16 @@
         </div>
     </div>
 
-    <!-- Row 3: Malayalam -->
+    <!-- Malayalam Row -->
     <div class="mb-5">
         <h4 style="font-size:1.3rem; font-weight:700; margin-bottom:15px;">🎬 Malayalam Cinema</h4>
         <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:15px; scrollbar-width:thin; scrollbar-color:#333 transparent;">
             {% for movie in movies %}
             {% if movie.genre == 'Drama' or movie.genre == 'Thriller' or movie.genre == 'Romance' %}
             <div onclick="window.location='/watch/{{ movie.id }}'" style="min-width:185px; max-width:185px; cursor:pointer; border-radius:6px; overflow:hidden; transition:transform 0.3s; flex-shrink:0;" onmouseover="this.style.transform='scale(1.1)';this.style.zIndex='10'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1'">
-                <div style="position:relative;">
-                    <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                    <div style="display:none; width:100%; height:105px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); align-items:center; justify-content:center; flex-direction:column; gap:5px;">
-                        <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
-                        <span style="font-size:0.65rem; color:#999; text-align:center; padding:0 5px;">{{ movie.title }}</span>
-                    </div>
+                <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div style="display:none; width:100%; height:105px; background:#1a1a1a; align-items:center; justify-content:center;">
+                    <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
                 </div>
                 <div style="background:#181818; padding:8px 10px;">
                     <div style="font-size:0.75rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ movie.title }}</div>
@@ -90,19 +112,16 @@
         </div>
     </div>
 
-    <!-- Row 4: Sci-Fi & Fantasy -->
+    <!-- Sci-Fi Row -->
     <div class="mb-5">
         <h4 style="font-size:1.3rem; font-weight:700; margin-bottom:15px;">🚀 Sci-Fi & Fantasy</h4>
         <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:15px; scrollbar-width:thin; scrollbar-color:#333 transparent;">
             {% for movie in movies %}
             {% if movie.genre == 'Sci-Fi' or movie.genre == 'Fantasy' %}
             <div onclick="window.location='/watch/{{ movie.id }}'" style="min-width:185px; max-width:185px; cursor:pointer; border-radius:6px; overflow:hidden; transition:transform 0.3s; flex-shrink:0;" onmouseover="this.style.transform='scale(1.1)';this.style.zIndex='10'" onmouseout="this.style.transform='scale(1)';this.style.zIndex='1'">
-                <div style="position:relative;">
-                    <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                    <div style="display:none; width:100%; height:105px; background:linear-gradient(135deg, #1a1a1a, #2a2a2a); align-items:center; justify-content:center; flex-direction:column; gap:5px;">
-                        <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
-                        <span style="font-size:0.65rem; color:#999; text-align:center; padding:0 5px;">{{ movie.title }}</span>
-                    </div>
+                <img src="{{ movie.thumbnail }}" style="width:100%; height:105px; object-fit:cover; background:#1a1a1a;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div style="display:none; width:100%; height:105px; background:#1a1a1a; align-items:center; justify-content:center;">
+                    <i class="fas fa-film" style="color:#e50914; font-size:1.5rem;"></i>
                 </div>
                 <div style="background:#181818; padding:8px 10px;">
                     <div style="font-size:0.75rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ movie.title }}</div>
@@ -114,4 +133,81 @@
     </div>
 
 </div>
+
+<!-- ALL MOVIES DATA for search -->
+<script>
+const allMovies = [
+    {% for movie in movies %}
+    {id: {{ movie.id }}, title: "{{ movie.title }}", genre: "{{ movie.genre }}", thumbnail: "{{ movie.thumbnail }}"},
+    {% endfor %}
+];
+
+// Auto-loop banner
+let currentSlide = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.banner-dot');
+
+function showSlide(index) {
+    slides.forEach((s, i) => {
+        s.style.opacity = i === index ? '1' : '0';
+    });
+    dots.forEach((d, i) => {
+        d.style.width = i === index ? '20px' : '8px';
+        d.style.background = i === index ? 'white' : 'rgba(255,255,255,0.4)';
+    });
+    currentSlide = index;
+}
+
+// Auto advance every 5 seconds
+setInterval(() => {
+    const next = (currentSlide + 1) % slides.length;
+    showSlide(next);
+}, 5000);
+
+// Click dots
+dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => showSlide(i));
+});
+
+// Search functionality
+const searchIcon = document.querySelector('.fa-search');
+const searchBar = document.getElementById('searchBar');
+const searchResults = document.getElementById('searchResults');
+const searchGrid = document.getElementById('searchGrid');
+
+if (searchIcon) {
+    searchIcon.addEventListener('click', function() {
+        searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
+        if (searchBar.style.display === 'block') {
+            document.getElementById('searchInput').focus();
+        } else {
+            searchResults.style.display = 'none';
+        }
+    });
+}
+
+function filterMovies(query) {
+    if (query.length < 2) {
+        searchResults.style.display = 'none';
+        return;
+    }
+    const filtered = allMovies.filter(m => m.title.toLowerCase().includes(query.toLowerCase()) || m.genre.toLowerCase().includes(query.toLowerCase()));
+    if (filtered.length === 0) {
+        searchGrid.innerHTML = '<p style="color:#777;">No results found</p>';
+    } else {
+        searchGrid.innerHTML = filtered.map(m => `
+            <div class="col-6 col-md-2">
+                <div onclick="window.location='/watch/${m.id}'" style="cursor:pointer; border-radius:6px; overflow:hidden;">
+                    <img src="${m.thumbnail}" style="width:100%; height:100px; object-fit:cover;" onerror="this.src='https://via.placeholder.com/200x100/1a1a1a/e50914?text=SX'">
+                    <div style="background:#181818; padding:8px;">
+                        <div style="font-size:0.75rem; font-weight:600;">${m.title}</div>
+                        <span style="background:#e50914; font-size:0.6rem; padding:1px 5px; border-radius:2px;">${m.genre}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    searchResults.style.display = 'block';
+}
+</script>
 {% endblock %}

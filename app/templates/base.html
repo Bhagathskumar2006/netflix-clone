@@ -11,23 +11,17 @@
         body { background-color: #141414; color: white; font-family: Arial, sans-serif; }
         .navbar { background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%); padding: 15px 40px; position: fixed; top: 0; width: 100%; z-index: 1000; transition: background 0.3s; }
         .navbar.scrolled { background: #141414 !important; }
-        .navbar-brand span { color: #e50914; font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
         .nav-links a { color: #e5e5e5; text-decoration: none; margin: 0 10px; font-size: 0.85rem; }
         .nav-links a:hover { color: white; }
-        .profile-menu { position: relative; cursor: pointer; }
-        .profile-icon { width: 34px; height: 34px; border-radius: 4px; background: #e50914; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; }
-        .dropdown-custom { display: none; position: absolute; right: 0; top: 50px; background: rgba(0,0,0,0.95); border: 1px solid #444; border-radius: 4px; min-width: 200px; padding: 8px 0; z-index: 9999; }
-        .profile-menu:hover .dropdown-custom { display: block; }
-        .dropdown-custom a { display: block; padding: 10px 16px; color: #e5e5e5; text-decoration: none; font-size: 0.85rem; }
-        .dropdown-custom a:hover { background: rgba(255,255,255,0.1); color: white; }
-        .dropdown-custom hr { border-color: #444; margin: 4px 0; }
-        .dropdown-custom .user-info { padding: 10px 16px; color: #b3b3b3; font-size: 0.8rem; border-bottom: 1px solid #444; margin-bottom: 5px; }
+        .profile-icon { width: 34px; height: 34px; border-radius: 4px; background: #e50914; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
+        .dropdown-menu-custom { display: none; position: absolute; right: 0; top: 50px; background: rgba(0,0,0,0.97); border: 1px solid #444; border-radius: 4px; min-width: 220px; padding: 8px 0; z-index: 99999; }
+        .dropdown-menu-custom.show { display: block; }
+        .dropdown-menu-custom a { display: block; padding: 10px 16px; color: #e5e5e5; text-decoration: none; font-size: 0.85rem; }
+        .dropdown-menu-custom a:hover { background: rgba(255,255,255,0.1); color: white; }
+        .dropdown-menu-custom hr { border-color: #444; margin: 4px 0; }
+        .user-info-box { padding: 10px 16px; border-bottom: 1px solid #444; margin-bottom: 5px; }
         .content-area { padding-top: 70px; }
-        .btn-streamx { background: #e50914; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: 600; }
-        .btn-streamx:hover { background: #f40612; color: white; }
         .flash-messages { position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px; }
-        .quick-switch { background: rgba(229,9,20,0.1); border: 1px solid #e50914; border-radius: 8px; padding: 10px 20px; margin: 80px 40px 0; display: flex; align-items: center; justify-content: space-between; }
-        .quick-switch span { font-size: 0.85rem; color: #e5e5e5; }
         .built-by { text-align: center; padding: 20px; color: #555; font-size: 0.75rem; border-top: 1px solid #222; margin-top: 40px; }
     </style>
 </head>
@@ -42,7 +36,6 @@
                 <a href="/dashboard">TV Shows</a>
                 <a href="/dashboard">Movies</a>
                 <a href="/dashboard">New & Popular</a>
-                <a href="/dashboard">My List</a>
             </div>
             {% endif %}
         </div>
@@ -50,18 +43,19 @@
             {% if current_user.is_authenticated %}
             <i class="fas fa-search text-white" style="cursor:pointer;"></i>
             <i class="fas fa-bell text-white" style="cursor:pointer;"></i>
-            <div class="profile-menu">
-                <div class="profile-icon">{{ current_user.username[0].upper() }}</div>
-                <div class="dropdown-custom">
-                    <div class="user-info">
-                        <div style="font-weight:600; color:white;">{{ current_user.username }}</div>
-                        <div style="color:#e50914; font-size:0.75rem; text-transform:uppercase;">{{ current_user.role }}</div>
+            <div style="position:relative;">
+                <div class="profile-icon" id="profileBtn">{{ current_user.username[0].upper() }}</div>
+                <div class="dropdown-menu-custom" id="profileDropdown">
+                    <div class="user-info-box">
+                        <div style="font-weight:600; color:white; font-size:0.9rem;">{{ current_user.username }}</div>
+                        <div style="color:#e50914; font-size:0.75rem; text-transform:uppercase; margin-top:2px;">{{ current_user.role }}</div>
                     </div>
                     <a href="/dashboard"><i class="fas fa-home me-2"></i>Home</a>
                     {% if current_user.role == 'admin' %}
-                    <a href="/admin"><i class="fas fa-cog me-2"></i>Admin Panel</a>
+                    <a href="/admin" style="color:#46d369;"><i class="fas fa-cog me-2"></i>Admin Panel</a>
                     <a href="/admin/add"><i class="fas fa-plus me-2"></i>Add Content</a>
                     {% endif %}
+                    <hr>
                     <a href="/switch/admin" style="color:#e50914;"><i class="fas fa-user-shield me-2"></i>Switch to Admin</a>
                     <a href="/switch/user"><i class="fas fa-user me-2"></i>Switch to User</a>
                     <hr>
@@ -69,7 +63,7 @@
                 </div>
             </div>
             {% else %}
-            <a href="/login" class="btn-streamx btn">Sign In</a>
+            <a href="/login" style="background:#e50914; color:white; padding:8px 20px; border-radius:4px; text-decoration:none; font-weight:600;">Sign In</a>
             {% endif %}
         </div>
     </div>
@@ -105,11 +99,35 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // Navbar scroll
     window.addEventListener('scroll', function() {
         const nav = document.getElementById('mainNav');
         if (window.scrollY > 50) nav.classList.add('scrolled');
         else nav.classList.remove('scrolled');
     });
+
+    // Profile dropdown - click to open/close
+    const profileBtn = document.getElementById('profileBtn');
+    const profileDropdown = document.getElementById('profileDropdown');
+
+    if (profileBtn && profileDropdown) {
+        profileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileDropdown.contains(e.target) && e.target !== profileBtn) {
+                profileDropdown.classList.remove('show');
+            }
+        });
+
+        // Keep open when clicking inside dropdown
+        profileDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
 </script>
 </body>
 </html>
