@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=host.docker.internal
+      - DB_USER=netflix_user
+      - DB_PASSWORD=Netflix@123456
+      - DB_NAME=netflix_db
+      - SECRET_KEY=netflix-super-secret-key-2024
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
