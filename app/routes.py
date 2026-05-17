@@ -177,3 +177,20 @@ def edit_content(id):
     movie = cursor.fetchone()
     db.close()
     return render_template('edit_content.html', movie=movie)
+
+# JWT Token endpoint
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
+@main.route('/api/token', methods=['POST'])
+def get_token():
+    email = request.json.get('email')
+    password = request.json.get('password').encode('utf-8')
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    db.close()
+    if user and bcrypt.checkpw(password, user['password'].encode('utf-8')):
+        token = create_access_token(identity=email)
+        return {'token': token}, 200
+    return {'error': 'Invalid credentials'}, 401
